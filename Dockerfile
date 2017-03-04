@@ -39,7 +39,7 @@ RUN mkdir -p /usr/share/wine/mono \
 	&& curl -SL 'http://sourceforge.net/projects/wine/files/Wine%20Mono/$WINE_MONO_VERSION/wine-mono-$WINE_MONO_VERSION.msi/download' -o /usr/share/wine/mono/wine-mono-$WINE_MONO_VERSION.msi \
 && chmod +x /usr/share/wine/mono/wine-mono-$WINE_MONO_VERSION.msi
 RUN mkdir -p /usr/share/wine/gecko && \
-    curl -SL 'http://dl.winehq.org/wine/wine-gecko/2.40/wine_gecko-2.40-x86.msi' -o /usr/share/wine/gecko/wine_gecko-2.40-x86.msi 
+    curl -SL 'http://dl.winehq.org/wine/wine-gecko/2.40/wine_gecko-2.40-x86.msi' -o /usr/share/wine/gecko/wine_gecko-2.40-x86.msi
 
 # Cleaning up.
 RUN   apt-get autoremove -y --purge software-properties-common && \
