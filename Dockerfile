@@ -6,8 +6,10 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV LC_ALL C.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
-ENV LC_CTYPE C
-
+ENV WINEPREFIX /root/.wine
+ENV WINEARCH win32
+ENV DISPLAY :0
+ENV WINE_MONO_VERSION 4.5.6
 # Configure user nobody to match unRAID's settings
  RUN \
  usermod -u 99 nobody && \
@@ -15,15 +17,14 @@ ENV LC_CTYPE C
  usermod -d /config nobody && \
  chown -R nobody:users /home
 
-# Install vnc, window manager and basic tools
-RUN apt-get update && apt-get install -y --no-install-recommends  language-pack-zh-hant  && \
-    apt-get install -y xvfb x11vnc xdotool wget supervisor fluxbox
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-RUN	dpkg --add-architecture i386 && \
 
 # Updating and upgrading a bit.
-	apt-get update && \
-	apt-get upgrade -y && \
+	# Install vnc, window manager and basic tools
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends  language-pack-zh-hant  && \
+    apt-get install -y x11vnc xdotool wget supervisor fluxbox
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN	dpkg --add-architecture i386 && \
 
 # We need software-properties-common to add ppas.
 	apt-get install -y --no-install-recommends software-properties-common && \
@@ -34,13 +35,19 @@ apt-get install -y --no-install-recommends wine1.8 cabextract unzip p7zip wget z
 # Installation of winbind to stop ntlm error messages.
 	apt-get install -y --no-install-recommends winbind 
 # Get latest version of mono for wine
-RUN mkdir -p ~/.wine ~/.wine/mono \
-	&& curl -SL 'http://sourceforge.net/projects/wine/files/Wine%20Mono/$WINE_MONO_VERSION/wine-mono-$WINE_MONO_VERSION.msi/download' -o ~/.wine/mono/wine-mono-$WINE_MONO_VERSION.msi \
-&& chmod +x ~/.wine/mono/wine-mono-$WINE_MONO_VERSION.msi
+RUN mkdir -p /usr/share/wine/mono \
+	&& curl -SL 'http://sourceforge.net/projects/wine/files/Wine%20Mono/$WINE_MONO_VERSION/wine-mono-$WINE_MONO_VERSION.msi/download' -o /usr/share/wine/mono/wine-mono-$WINE_MONO_VERSION.msi \
+&& chmod +x /usr/share/wine/mono/wine-mono-$WINE_MONO_VERSION.msi
+RUN mkdir -p /usr/share/wine/gecko && \
+    curl -SL 'http://dl.winehq.org/wine/wine-gecko/2.40/wine_gecko-2.40-x86.msi' -o /usr/share/wine/gecko/wine_gecko-2.40-x86.msi 
 
-ENV WINEPREFIX ~/prefix32
-ENV WINEARCH win32
-ENV DISPLAY :0
+# Cleaning up.
+RUN   apt-get autoremove -y --purge software-properties-common && \
+      apt-get autoremove -y --purge && \
+      apt-get clean -y && \
+      rm -rf /home/wine/.cache && \
+      rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 WORKDIR /root/
 
 # Add Traditional Chinese Fonts
