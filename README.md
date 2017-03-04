@@ -6,11 +6,11 @@ Using the docker image to run windows application like smartget on my Synology N
 ### Run image as Server
    * Run
      ```bash
-     docker run -p 8080:8080 sykuang/wine
+     docker run -p 8080:8080 -p 8081:22 sykuang/wine
      ```
    * Run with Chinese
      ```bash
-     docker run -p 8080:8080  -e LANG=zh_TW.UTF-8 -e LC_ALL=zh_TW.UTF-8 sykuang/wine
+     docker run -p 8080:8080 -p 8081:22  -e LANG=zh_TW.UTF-8 -e LC_ALL=zh_TW.UTF-8 sykuang/wine
      ```
    * Adanvace Run
      ```bash
@@ -18,6 +18,7 @@ Using the docker image to run windows application like smartget on my Synology N
      -v $HOME/Downloads:/home/xclient/.wine/drive_c/Downloads \
      -v $HOME/WinApp:/home/xclient/.wine/drive_c/WinApp \
      -p 8080:8080 \
+     -p 8081:22 \
      sykuang/wine
      ```
 
@@ -29,6 +30,7 @@ This follows these docker conventions:
 	```bash
     -p 8083:8080
     ```
+*  `-p 8081:22` SSH
 
 ### Client
 

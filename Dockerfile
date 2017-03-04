@@ -19,7 +19,7 @@ RUN	dpkg --add-architecture i386 && \
 
 # We need software-properties-common to add ppas.
 	apt-get install -y --no-install-recommends software-properties-common && \
-add-apt-repository ppa:ubuntu-wine/ppa && \
+  add-apt-repository ppa:ubuntu-wine/ppa && \
 	apt-get update && \
 apt-get install -y --no-install-recommends wine1.8 cabextract unzip p7zip zenity xvfb && \
 	curl -SL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks  -o /usr/local/bin/winetricks && \
@@ -66,4 +66,3 @@ ENV WINEPREFIX /root/.wine
 CMD ["/usr/bin/supervisord"]
 # Expose Port
 EXPOSE 8080
-EXPOSE 8081
