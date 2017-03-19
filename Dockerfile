@@ -52,17 +52,19 @@ RUN adduser \
             --shell /bin/bash \
             --gecos "user for running an xclient application" \
             --quiet \
-            xclient 
+            xclient
 RUN echo "xclient:1234" | chpasswd
 # Generate ssh key
 RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key && \
     ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key && \
     ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key
-## Add novnc
-ADD novnc /root/novnc
 # Add supervisor conf
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-ENV WINEPREFIX /root/.wine
+
+## Add novnc
+ENV WINEPREFIX /home/xclient/.wine
+ADD novnc /home/xclient/novnc
+RUN chown xclient -R /home/xclient/novnc
 CMD ["/usr/bin/supervisord"]
 # Expose Port
 EXPOSE 8080
