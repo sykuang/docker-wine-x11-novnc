@@ -23,6 +23,7 @@ RUN	dpkg --add-architecture i386 && \
 	apt-get update && \
 apt-get install -y --no-install-recommends wine1.8 cabextract unzip p7zip zenity xvfb && \
 	curl -SL https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks  -o /usr/local/bin/winetricks && \
+    chmod a+x /usr/local/bin/winetricks
 # Installation of winbind to stop ntlm error messages.
 	apt-get install -y --no-install-recommends winbind
 # Get latest version of mono for wine
