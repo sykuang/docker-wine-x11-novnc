@@ -64,6 +64,8 @@ ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 ## Add novnc
 ENV WINEPREFIX /home/xclient/.wine
+ENV WINEARCH win32
+ENV HOME /home/xclient/
 ADD novnc /home/xclient/novnc
 RUN chown xclient -R /home/xclient/novnc
 CMD ["/usr/bin/supervisord"]
