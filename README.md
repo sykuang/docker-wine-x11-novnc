@@ -8,7 +8,7 @@ Using the docker image to run windows application like smartget on my Synology N
      ```bash
      docker run -p 8080:8080 -p 8081:22 sykuang/wine
      ```
-   * Run with Chinese
+   * Run with Tranditional Chinese Support
      ```bash
      docker run -p 8080:8080 -p 8081:22  -e LANG=zh_TW.UTF-8 -e LC_ALL=zh_TW.UTF-8 sykuang/wine
      ```
