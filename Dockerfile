@@ -14,7 +14,7 @@ ENV WINE_MONO_VERSION 4.5.6
 	# Install vnc, window manager and basic tools
 RUN apt-get update && \
     apt-get install -y --no-install-recommends  language-pack-zh-hant  && \
-    apt-get install -y x11vnc xdotool supervisor fluxbox && \
+    apt-get install -y x11vnc xdotool supervisor fluxbox git && \
 	dpkg --add-architecture i386 && \
 
 # We need software-properties-common to add ppas.
@@ -31,15 +31,11 @@ apt-get install -y --no-install-recommends wine1.8 cabextract unzip p7zip zenity
 	curl -SL -k 'http://sourceforge.net/projects/wine/files/Wine%20Mono/$WINE_MONO_VERSION/wine-mono-$WINE_MONO_VERSION.msi/download' -o /usr/share/wine/mono/wine-mono-$WINE_MONO_VERSION.msi && \
     chmod +x /usr/share/wine/mono/wine-mono-$WINE_MONO_VERSION.msi && \
     mkdir -p /usr/share/wine/gecko && \
-    curl -SL -k 'http://dl.winehq.org/wine/wine-gecko/2.40/wine_gecko-2.40-x86.msi' -o /usr/share/wine/gecko/wine_gecko-2.40-x86.msi
-
-
-WORKDIR /root/
-
-# Add Traditional Chinese Fonts
-RUN mkdir -p /usr/share/fonts/TTF/ && \
-    curl -SL -k https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/TraditionalChinese/SourceHanSansTC-Regular.otf -o /usr/share/fonts/TTF/SourceHanSansTC-Regular.otf
-RUN curl -SL -k https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/TraditionalChinese/SourceHanSansTC-Bold.otf -o /usr/share/fonts/TTF/SourceHanSansTC-Bold.otf && \
+    curl -SL -k 'http://dl.winehq.org/wine/wine-gecko/2.40/wine_gecko-2.40-x86.msi' -o /usr/share/wine/gecko/wine_gecko-2.40-x86.msi && \
+    # Add Traditional Chinese Fonts
+    mkdir -p /usr/share/fonts/TTF/ && \
+    curl -SL -k https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/TraditionalChinese/SourceHanSansTC-Regular.otf -o /usr/share/fonts/TTF/SourceHanSansTC-Regular.otf && \
+    curl -SL -k https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/TraditionalChinese/SourceHanSansTC-Bold.otf -o /usr/share/fonts/TTF/SourceHanSansTC-Bold.otf && \
 # Create user for ssh
     adduser \
             --home /home/xclient \
@@ -52,7 +48,12 @@ RUN curl -SL -k https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/T
 # Generate ssh key
     ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key && \
     ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key && \
-    ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key
+    ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key && \
+    # Clone noVNC
+    git clone https://github.com/novnc/noVNC.git /home/xclient/novnc && \
+    # Clone websockify for noVNC
+    git clone https://github.com/kanaka/websockify /home/xclient/novnc/utils/websockify && \
+    ln -s /home/xclient/novnc/vnc.html /home/xclient/novnc/index.html
 # Add supervisor conf
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
@@ -67,8 +68,7 @@ RUN   apt-get autoremove -y --purge software-properties-common && \
 ENV WINEPREFIX /home/xclient/.wine
 ENV WINEARCH win32
 ENV HOME /home/xclient/
-ADD novnc /home/xclient/novnc
 RUN chown xclient -R /home/xclient/novnc
 CMD ["/usr/bin/supervisord"]
 # Expose Port
-EXPOSE 8080
+EXPOSE 8080 22
