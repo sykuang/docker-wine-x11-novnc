@@ -1,14 +1,16 @@
 FROM phusion/baseimage:0.9.16
 
 # Set correct environment variables
-ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
-ENV LC_ALL C.UTF-8
+ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 ENV WINEARCH win32
 ENV DISPLAY :0
 ENV WINE_MONO_VERSION 4.5.6
+ENV WINEPREFIX /home/xclient/.wine
+ENV WINEARCH win32
+ENV HOME /home/xclient/
 
 # Updating and upgrading a bit.
 	# Install vnc, window manager and basic tools
@@ -45,30 +47,27 @@ apt-get install -y --no-install-recommends wine1.8 cabextract unzip p7zip zenity
             --quiet \
             xclient && \
     echo "xclient:1234" | chpasswd && \
-# Generate ssh key
-    ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key && \
-    ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key && \
-    ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key && \
     # Clone noVNC
     git clone https://github.com/novnc/noVNC.git /home/xclient/novnc && \
     # Clone websockify for noVNC
     git clone https://github.com/kanaka/websockify /home/xclient/novnc/utils/websockify && \
-    ln -s /home/xclient/novnc/vnc.html /home/xclient/novnc/index.html
+    ln -s /home/xclient/novnc/vnc.html /home/xclient/novnc/index.html && \
+    chown xclient -R /home/xclient/novnc && \
+# Cleaning up.
+    apt-get autoremove -y --purge software-properties-common && \
+    apt-get autoremove -y --purge && \
+    apt-get clean -y && \
+    rm -rf /home/wine/.cache && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Add supervisor conf
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Cleaning up.
-RUN   apt-get autoremove -y --purge software-properties-common && \
-      apt-get autoremove -y --purge && \
-      apt-get clean -y && \
-      rm -rf /home/wine/.cache && \
-      rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Add entrypoint.sh
+ADD entrypoint.sh /etc/entrypoint.sh
+
 
 ## Add novnc
-ENV WINEPREFIX /home/xclient/.wine
-ENV WINEARCH win32
-ENV HOME /home/xclient/
-RUN chown xclient -R /home/xclient/novnc
-CMD ["/usr/bin/supervisord"]
+ENTRYPOINT ["/bin/bash","/etc/entrypoint.sh"]
 # Expose Port
 EXPOSE 8080 22
