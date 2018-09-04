@@ -9,31 +9,34 @@ ENV WINEARCH win32
 ENV DISPLAY :0
 ENV WINE_MONO_VERSION 4.5.6
 ENV WINEPREFIX /home/xclient/.wine
-ENV WINEARCH win32
+#ENV WINEARCH win32
 ENV HOME /home/xclient/
 
 # Updating and upgrading a bit.
-	# Install vnc, window manager and basic tools
+# Install vnc, window manager and basic tools
 RUN apt-get update && \
     apt-get install -y --no-install-recommends  language-pack-zh-hant  && \
     apt-get install -y x11vnc xdotool supervisor fluxbox git && \
-	dpkg --add-architecture i386 && \
+    dpkg --add-architecture i386 && \
 
 # We need software-properties-common to add ppas.
-	apt-get install -y --no-install-recommends software-properties-common && \
-        add-apt-repository ppa:ubuntu-wine/ppa && \
-	apt-get update && \
-apt-get install -y --no-install-recommends wine1.8 cabextract unzip p7zip zenity xvfb && \
-	curl -SL -k https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks  -o /usr/local/bin/winetricks && \
-    chmod a+x /usr/local/bin/winetricks  && \
+    curl https://dl.winehq.org/wine-builds/Release.key -o /tmp/Release.key && \
+    apt-get install -y --no-install-recommends software-properties-common && \
+    apt-key add /tmp/Release.key && \
+    apt-add-repository 'https://dl.winehq.org/wine-builds/ubuntu/' && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends  winehq-stable && \
+    apt-get install -y --no-install-recommends cabextract unzip p7zip zenity xvfb && \
+    #curl -SL -k https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks  -o /usr/local/bin/winetricks && \
+    #chmod a+x /usr/local/bin/winetricks  && \
 # Installation of winbind to stop ntlm error messages.
-	apt-get install -y --no-install-recommends winbind && \
+    apt-get install -y --no-install-recommends winbind && \
 # Get latest version of mono for wine
-    mkdir -p /usr/share/wine/mono && \
-	curl -SL -k 'http://sourceforge.net/projects/wine/files/Wine%20Mono/$WINE_MONO_VERSION/wine-mono-$WINE_MONO_VERSION.msi/download' -o /usr/share/wine/mono/wine-mono-$WINE_MONO_VERSION.msi && \
-    chmod +x /usr/share/wine/mono/wine-mono-$WINE_MONO_VERSION.msi && \
-    mkdir -p /usr/share/wine/gecko && \
-    curl -SL -k 'http://dl.winehq.org/wine/wine-gecko/2.40/wine_gecko-2.40-x86.msi' -o /usr/share/wine/gecko/wine_gecko-2.40-x86.msi && \
+    #mkdir -p /usr/share/wine/mono && \
+    #curl -SL -k 'http://sourceforge.net/projects/wine/files/Wine%20Mono/$WINE_MONO_VERSION/wine-mono-$WINE_MONO_VERSION.msi/download' -o /usr/share/wine/mono/wine-mono-$WINE_MONO_VERSION.msi && \
+    #chmod +x /usr/share/wine/mono/wine-mono-$WINE_MONO_VERSION.msi && \
+    #mkdir -p /usr/share/wine/gecko && \
+    #curl -SL -k 'http://dl.winehq.org/wine/wine-gecko/2.40/wine_gecko-2.40-x86.msi' -o /usr/share/wine/gecko/wine_gecko-2.40-x86.msi && \
     # Add Traditional Chinese Fonts
     mkdir -p /usr/share/fonts/TTF/ && \
     curl -SL -k https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/TraditionalChinese/SourceHanSansTC-Regular.otf -o /usr/share/fonts/TTF/SourceHanSansTC-Regular.otf && \

@@ -1,3 +1,7 @@
+![Docker Pulls](https://img.shields.io/docker/pulls/sykuang/wine.svg)
+![Docker Stars](https://img.shields.io/docker/stars/sykuang/wine.svg?colorB=dfb317)
+[![Docker Automated build](https://img.shields.io/docker/automated/sykuang/wine.svg)](https://hub.docker.com/r/sykuang/wine/)
+[![Docker build](https://img.shields.io/docker/build/sykuang/wine.svg)](https://hub.docker.com/r/sykuang/wine/)
 # Run A windows application with docker
 Using the docker image to run windows application like smartget on my Synology Nas(DS 916+)
 ## Install Image
