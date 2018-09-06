@@ -1,4 +1,4 @@
-FROM phusion/baseimage:0.9.16
+FROM phusion/baseimage:0.11
 
 # Set correct environment variables
 ENV DEBIAN_FRONTEND noninteractive
