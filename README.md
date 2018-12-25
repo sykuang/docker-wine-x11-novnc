@@ -4,13 +4,6 @@
 [![Docker build](https://img.shields.io/docker/build/sykuang/wine-x11-novnc.svg)](https://hub.docker.com/r/sykuang/wine-x11-novnc/)
 # Run A windows application with docker
 Using the docker image to run windows application like smartget on my Synology Nas(DS 916+)
-## Warning
-<figure>
-<figcaption class="warning">
-There are bugs in DSM <b>6.2.1-23824</b> which will cause runtime error when running 32-bit executable.
-So far there is no other solution but downgrade the DSM version to avoid this issue.
-</figcaption>
-</figure>
 
 ## Install Image
    `docker pull sykuang/wine`
