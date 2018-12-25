@@ -8,19 +8,18 @@ ENV LANGUAGE en_US.UTF-8
 ENV WINEARCH win32
 ENV DISPLAY :0
 ENV WINE_MONO_VERSION 4.5.6
-ENV WINEPREFIX /home/xclient/.wine
+ENV WINEPREFIX /home/docker/.wine
 #ENV WINEARCH win32
-ENV HOME /home/xclient/
+ENV HOME /home/docker/
 
 # Updating and upgrading a bit.
 # Install vnc, window manager and basic tools
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends  language-pack-zh-hant  && \
-    apt-get install -y x11vnc xdotool supervisor fluxbox git && \
+    apt-get install -y --no-install-recommends language-pack-zh-hant  x11vnc xdotool supervisor fluxbox git terminology sudo && \
     dpkg --add-architecture i386 && \
 
 # We need software-properties-common to add ppas.
-    curl https://dl.winehq.org/wine-builds/Release.key -o /tmp/Release.key && \
+    curl https://dl.winehq.org/wine-builds/winehq.key -o /tmp/Release.key && \
     apt-get install -y --no-install-recommends software-properties-common && \
     apt-key add /tmp/Release.key && \
     apt-add-repository 'https://dl.winehq.org/wine-builds/ubuntu/' && \
@@ -41,21 +40,22 @@ RUN apt-get update && \
     mkdir -p /usr/share/fonts/TTF/ && \
     curl -SL -k https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/TraditionalChinese/SourceHanSansTC-Regular.otf -o /usr/share/fonts/TTF/SourceHanSansTC-Regular.otf && \
     curl -SL -k https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/TraditionalChinese/SourceHanSansTC-Bold.otf -o /usr/share/fonts/TTF/SourceHanSansTC-Bold.otf && \
-# Create user for ssh
+    # Create user for ssh
     adduser \
-            --home /home/xclient \
+            --home /home/docker \
             --disabled-password \
             --shell /bin/bash \
-            --gecos "user for running an xclient application" \
+            --gecos "user for running application" \
             --quiet \
-            xclient && \
-    echo "xclient:1234" | chpasswd && \
+            docker && \
+    echo "docker:1234" | chpasswd && \
+    adduser docker sudo && \
     # Clone noVNC
-    git clone https://github.com/novnc/noVNC.git /home/xclient/novnc && \
+    runuser -l docker -c "git clone https://github.com/novnc/noVNC.git /home/docker/novnc" && \
     # Clone websockify for noVNC
-    git clone https://github.com/kanaka/websockify /home/xclient/novnc/utils/websockify && \
-    ln -s /home/xclient/novnc/vnc.html /home/xclient/novnc/index.html && \
-    chown xclient -R /home/xclient/novnc && \
+    runuser -l docker -c "git clone https://github.com/kanaka/websockify /home/docker/novnc/utils/websockify" && \
+    ln -s /home/docker/novnc/vnc.html /home/docker/novnc/index.html && \
+    chown docker -R /home/docker/novnc && \
 # Cleaning up.
     apt-get autoremove -y --purge software-properties-common && \
     apt-get autoremove -y --purge && \

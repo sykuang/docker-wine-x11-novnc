@@ -20,8 +20,8 @@ Using the docker image to run windows application like smartget on my Synology N
    * Adanvace Run
      ```bash
      docker run \
-     -v $HOME/Downloads:/home/xclient/.wine/drive_c/Downloads \
-     -v $HOME/WinApp:/home/xclient/.wine/drive_c/WinApp \
+     -v $HOME/Downloads:/home/docker/.wine/drive_c/Downloads \
+     -v $HOME/WinApp:/home/docker/.wine/drive_c/WinApp \
      -p 8080:8080 \
      -p 8081:22 \
      sykuang/wine
@@ -29,8 +29,8 @@ Using the docker image to run windows application like smartget on my Synology N
 
 This follows these docker conventions:
 
-*  `-v $HOME/WinApp:/home/xclient/.wine/drive_c/WinAp` shared volume (folder) for your Window's programs data.
-*  `-v $HOME/Downloads:/home/xclient/.wine/drive_c/Downloads` shared volume (folder) for your Window's Download Folder.
+*  `-v $HOME/WinApp:/home/docker/.wine/drive_c/WinAp` shared volume (folder) for your Window's programs data.
+*  `-v $HOME/Downloads:/home/docker/.wine/drive_c/Downloads` shared volume (folder) for your Window's Download Folder.
 *  `-p 8080:8080` port that you will be connecting to.(8080 has been hard code in the dockerfile, You can use port fowarding to other port like
 	```bash
     -p 8083:8080
@@ -41,7 +41,7 @@ This follows these docker conventions:
 
 * Using SSH
 	```bash
-	ssh -x xclient@hostname -p 8081
+	ssh -x docker@hostname -p 8081
 	```
     Defalutl password is 1234
 * Using noVNC
