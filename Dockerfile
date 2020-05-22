@@ -10,7 +10,6 @@ ENV DISPLAY :0
 ENV WINE_MONO_VERSION 5.0.0
 ENV WINE_GECKO_VERSION 2.47.1
 ENV WINEPREFIX /home/docker/.wine
-#ENV WINEARCH win32
 ENV HOME /home/docker/
 
 # Updating and upgrading a bit.
