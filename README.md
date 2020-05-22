@@ -3,7 +3,7 @@
 [![Docker Automated build](https://img.shields.io/docker/automated/sykuang/wine-x11-novnc.svg)](https://hub.docker.com/r/sykuang/wine-x11-novnc/)
 [![Docker build](https://img.shields.io/docker/build/sykuang/wine-x11-novnc.svg)](https://hub.docker.com/r/sykuang/wine-x11-novnc/)
 # Run A windows application with docker
-Using the docker image to run windows application like smartget on my Synology Nas(DS 916+)
+Using the docker image to run windows application with Chinese support like smartget on my Synology Nas(DS 916+)
 
 ## Install Image
    `docker pull sykuang/wine`
