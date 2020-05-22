@@ -15,7 +15,7 @@ ENV HOME /home/docker/
 # Updating and upgrading a bit.
 # Install vnc, window manager and basic tools
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends language-pack-zh-hant  x11vnc xdotool supervisor fluxbox git terminology sudo && \
+    apt-get install -y --no-install-recommends language-pack-zh-hant x11vnc supervisor fluxbox git sudo && \
     dpkg --add-architecture i386 && \
 
 # We need software-properties-common to add ppas.
@@ -25,8 +25,8 @@ RUN apt-get update && \
     apt-add-repository 'https://dl.winehq.org/wine-builds/ubuntu/' && \
     add-apt-repository ppa:cybermax-dexter/sdl2-backport && \
     apt-get update && \
-    apt-get install -y --no-install-recommends  winehq-stable && \
-    apt-get install -y --no-install-recommends cabextract unzip p7zip zenity xvfb && \
+    apt-get install -y --no-install-recommends winehq-stable && \
+    apt-get install -y --no-install-recommends cabextract unzip p7zip xvfb && \
 
 # Install winetricks
     curl -SL -k https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks  -o /usr/local/bin/winetricks && \
