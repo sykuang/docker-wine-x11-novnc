@@ -40,12 +40,12 @@ RUN apt-get update && \
     mkdir -p /usr/share/wine/gecko && \
     curl -SL -k "http://dl.winehq.org/wine/wine-gecko/$WINE_GECKO_VERSION/wine-gecko-$WINE_GECKO_VERSION-x86.msi" -o "/usr/share/wine/gecko/wine-gecko-$WINE_GECKO_VERSION-x86.msi" && \
     chmod +x "/usr/share/wine/gecko/wine-gecko-$WINE_GECKO_VERSION-x86.msi" && \
-    # Add Traditional Chinese Fonts
+# Add Traditional Chinese Fonts
     mkdir -p /usr/share/fonts/TTF/ && \
     curl -SL -k https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/TraditionalChinese/SourceHanSansTC-Regular.otf -o /usr/share/fonts/TTF/SourceHanSansTC-Regular.otf && \
     curl -SL -k https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/TraditionalChinese/SourceHanSansTC-Bold.otf -o /usr/share/fonts/TTF/SourceHanSansTC-Bold.otf && \
 
-    # Create user for ssh
+# Create user for ssh
     adduser \
             --home /home/docker \
             --disabled-password \
@@ -55,10 +55,12 @@ RUN apt-get update && \
             docker && \
     echo "docker:1234" | chpasswd && \
     adduser docker sudo && \
-    # Clone noVNC
-    runuser -l docker -c "git clone https://github.com/novnc/noVNC.git /home/docker/novnc" && \
-    # Clone websockify for noVNC
-    runuser -l docker -c "git clone https://github.com/kanaka/websockify /home/docker/novnc/utils/websockify" && \
+# Clone noVNC
+    runuser -l docker -c "git clone https://github.com/novnc/noVNC.git /home/docker/novnc --depth=1" && \
+    rm -rf /home/docker/novnc/.git && \
+# Clone websockify for noVNC
+    runuser -l docker -c "git clone https://github.com/kanaka/websockify /home/docker/novnc/utils/websockify --depth=1" && \
+    rm -rf /home/docker/novnc/utils/websockify/.git && \
     ln -s /home/docker/novnc/vnc.html /home/docker/novnc/index.html && \
     chown docker -R /home/docker/novnc && \
 # Cleaning up.
