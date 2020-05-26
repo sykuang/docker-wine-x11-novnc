@@ -6,7 +6,7 @@
 Using the docker image to run windows application with Chinese support like smartget on my Synology Nas(DS 916+)
 
 ## Install Image
-   `docker pull sykuang/wine`
+   `docker pull sykuang/wine-x11-novnc`
 ## Usage
 ### Run image as Server
    * Run
