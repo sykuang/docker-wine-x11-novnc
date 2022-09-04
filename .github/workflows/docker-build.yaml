@@ -31,4 +31,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: user/app:latest
+          tags: sykuang/archlinux-ssh-x11:latest
