@@ -1,13 +1,33 @@
 #!/bin/bash
-
-if [ ! -f /etc/ssh/ssh_host_rsa_key ] ; then
-# Generate ssh key
-    ssh-keygen -N '' -t rsa -f /etc/ssh/ssh_host_rsa_key
-    ssh-keygen -N '' -t dsa -f /etc/ssh/ssh_host_dsa_key
-    ssh-keygen -N '' -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key
+function check_vnc_pass {
+  if [[ -n $VNC_PASSWORD ]]; then
+    local VNC_PASSWD_PATH="/home/docker/.vnc/passwd"
+    rm -f $VNC_PASSWD_PATH
+    if [[ ! -d "/home/docker/.vnc" ]]; then mkdir -p /home/docker/.vnc;fi
+    x11vnc -storepasswd "$VNC_PASSWORD" "$VNC_PASSWD_PATH"
+    export X11_ARGS="-rfbauth $VNC_PASSWD_PATH"
+    chown docker $VNC_PASSWD_PATH
+    chmod 600 $VNC_PASSWD_PATH
+  else
+    export X11_ARGS=""
+  fi
+}
+if [ ! -f /etc/ssh/ssh_host_rsa_key ]; then
+  # Generate ssh key
+  ssh-keygen -N '' -t rsa -f /etc/ssh/ssh_host_rsa_key
+  ssh-keygen -N '' -t dsa -f /etc/ssh/ssh_host_dsa_key
+  ssh-keygen -N '' -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key
 fi
-if [[ -e $PASSWORD ]];then
-  x11vnc -storepasswd  "$PASSWORD"
-  echo "docker:1234" | chpasswd
+
+check_vnc_pass
+
+if [[ -n $USER_PASSWORD ]];then
+  echo "docker:$USER_PASSWORD" | chpasswd
+fi
+if [[ -n $UID ]]; then
+  usermod -u "$UID" docker
+fi
+if [[ -n $GID ]]; then
+  groupmod -g "$GID" docker
 fi
 /usr/bin/supervisord

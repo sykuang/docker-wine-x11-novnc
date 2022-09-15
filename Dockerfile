@@ -1,4 +1,4 @@
-FROM phusion/baseimage:0.11
+FROM phusion/baseimage:focal-1.2.0
 
 # Set correct environment variables
 ENV DEBIAN_FRONTEND noninteractive
@@ -7,27 +7,23 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 ENV WINEARCH win32
 ENV DISPLAY :0
-ENV WINE_MONO_VERSION 5.0.0
+ENV WINE_MONO_VERSION 7.0.0
 ENV WINE_GECKO_VERSION 2.47.1
 ENV WINEPREFIX /home/docker/.wine
 ENV HOME /home/docker/
+ENV NOVNC_HOME /usr/libexec/noVNCdim
 
 # Updating and upgrading a bit.
 # Install vnc, window manager and basic tools
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends language-pack-zh-hant x11vnc supervisor fluxbox git sudo && \
+    apt-get install -y --no-install-recommends language-pack-zh-hant x11vnc supervisor fluxbox sudo && \
     dpkg --add-architecture i386 && \
-
 # We need software-properties-common to add ppas.
-    curl https://dl.winehq.org/wine-builds/winehq.key -o /tmp/Release.key && \
-    apt-get install -y --no-install-recommends software-properties-common && \
-    apt-key add /tmp/Release.key && \
-    apt-add-repository 'https://dl.winehq.org/wine-builds/ubuntu/' && \
-    add-apt-repository ppa:cybermax-dexter/sdl2-backport && \
+    # apt-get install -y --no-install-recommends software-properties-common && \
     apt-get update && \
-    apt-get install -y --no-install-recommends winehq-stable && \
-    apt-get install -y --no-install-recommends cabextract unzip p7zip xvfb && \
-
+    apt-get install -y --no-install-recommends wine wine32 && \
+    apt-get install -y --no-install-recommends xvfb python3 && \
+    apt-get install -y --no-install-recommends kitty && \
 # Install winetricks
     curl -SL -k https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks  -o /usr/local/bin/winetricks && \
     chmod a+x /usr/local/bin/winetricks  && \
@@ -44,7 +40,6 @@ RUN apt-get update && \
     mkdir -p /usr/share/fonts/TTF/ && \
     curl -SL -k https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/TraditionalChinese/SourceHanSansTC-Regular.otf -o /usr/share/fonts/TTF/SourceHanSansTC-Regular.otf && \
     curl -SL -k https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/TraditionalChinese/SourceHanSansTC-Bold.otf -o /usr/share/fonts/TTF/SourceHanSansTC-Bold.otf && \
-
 # Create user for ssh
     adduser \
             --home /home/docker \
@@ -54,30 +49,27 @@ RUN apt-get update && \
             --quiet \
             docker && \
     echo "docker:1234" | chpasswd && \
-    adduser docker sudo && \
+    adduser docker sudo 
+
 # Clone noVNC
-    runuser -l docker -c "git clone https://github.com/novnc/noVNC.git /home/docker/novnc --depth=1" && \
-    rm -rf /home/docker/novnc/.git && \
-# Clone websockify for noVNC
-    runuser -l docker -c "git clone https://github.com/kanaka/websockify /home/docker/novnc/utils/websockify --depth=1" && \
-    rm -rf /home/docker/novnc/utils/websockify/.git && \
-    ln -s /home/docker/novnc/vnc.html /home/docker/novnc/index.html && \
-    chown docker -R /home/docker/novnc && \
+RUN mkdir -p "${NOVNC_HOME}"/utils/websockify \
+    && curl -L https://github.com/novnc/noVNC/archive/v1.3.0.tar.gz | tar xz --strip 1 -C "${NOVNC_HOME}" \
+    && curl -L https://github.com/novnc/websockify/archive/v0.10.0.tar.gz | tar xz --strip 1 -C "${NOVNC_HOME}"/utils/websockify \
+    && chmod +x -v "${NOVNC_HOME}"/utils/novnc_proxy \
+    && ln -s "${NOVNC_HOME}"/vnc.html "${NOVNC_HOME}"/index.html
+
+RUN chown -R docker "${NOVNC_HOME}"
 # Cleaning up.
-    apt-get autoremove -y --purge software-properties-common && \
-    apt-get autoremove -y --purge && \
+RUN apt-get autoremove -y --purge && \
     apt-get clean -y && \
     rm -rf /home/wine/.cache && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 # Add supervisor conf
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Add entrypoint.sh
-ADD entrypoint.sh /etc/entrypoint.sh
+COPY entrypoint.sh /etc/entrypoint.sh
 
-
-## Add novnc
 ENTRYPOINT ["/bin/bash","/etc/entrypoint.sh"]
 # Expose Port
 EXPOSE 8080 22
