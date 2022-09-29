@@ -1,9 +1,7 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/sykuang/wine-x11-novnc.svg)
-![Docker Stars](https://img.shields.io/docker/stars/sykuang/wine-x11-novnc.svg?colorB=dfb317)
-[![Docker Automated build](https://img.shields.io/docker/automated/sykuang/wine-x11-novnc.svg)](https://hub.docker.com/r/sykuang/wine-x11-novnc/)
-[![Docker build](https://img.shields.io/docker/build/sykuang/wine-x11-novnc.svg)](https://hub.docker.com/r/sykuang/wine-x11-novnc/)
+![Docker build](https://github.com/sykuang/docker-wine-x11-novnc/actions/workflows/docker-build.yaml/badge.svg)
 # Run A windows application with docker
-Using the docker image to run windows application with Chinese support like smartget on my Synology Nas(DS 916+)
+Using the docker image to run windows applications with Chinese support like "Smartget" on my Synology Nas(DS 916+)
 
 ## Install Image
    `docker pull sykuang/wine-x11-novnc`
@@ -41,7 +39,7 @@ This follows these docker conventions:
 
 *  `-v $HOME/WinApp:/home/docker/.wine/drive_c/WinAp` shared volume (folder) for your Window's programs data.
 *  `-v $HOME/Downloads:/home/docker/.wine/drive_c/Downloads` shared volume (folder) for your Window's Download Folder.
-*  `-p 8080:8080` port that you will be connecting to.(8080 has been hard code in the dockerfile, You can use port forwarding to other port like
+*  `-p 8080:8080` port that you will be connecting to. (8080 has been hard code in the Dockerfile, You can use port forwarding to other port like)
 	```bash
     -p 8083:8080
     ```
@@ -61,7 +59,7 @@ This follows these docker conventions:
 	```bash
 	ssh -x docker@hostname -p 8081
 	```
-    Defalutl password is 1234
+    Default password is 1234
 * Using noVNC
 	```
 	firefox http://hostname:8080
