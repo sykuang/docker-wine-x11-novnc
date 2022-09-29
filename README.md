@@ -13,15 +13,25 @@ Using the docker image to run windows application with Chinese support like smar
      ```bash
      docker run -p 8080:8080 -p 8081:22 sykuang/wine-x11-novnc
      ```
-   * Run with Tranditional Chinese Support
+   * Run with Traditional Chinese Support
      ```bash
      docker run -p 8080:8080 -p 8081:22  -e LANG=zh_TW.UTF-8 -e LC_ALL=zh_TW.UTF-8 sykuang/wine-x11-novnc
      ```
-   * Adanvace Run
+   * Advance Run
      ```bash
      docker run \
      -v $HOME/Downloads:/home/docker/.wine/drive_c/Downloads \
      -v $HOME/WinApp:/home/docker/.wine/drive_c/WinApp \
+     -p 8080:8080 \
+     -p 8081:22 \
+     sykuang/wine
+     ```
+   * Advance Run with VNC password
+     ```bash
+     docker run \
+     -v $HOME/Downloads:/home/docker/.wine/drive_c/Downloads \
+     -v $HOME/WinApp:/home/docker/.wine/drive_c/WinApp \
+     -e VNC_PASSWORD=password \
      -p 8080:8080 \
      -p 8081:22 \
      sykuang/wine
@@ -31,11 +41,19 @@ This follows these docker conventions:
 
 *  `-v $HOME/WinApp:/home/docker/.wine/drive_c/WinAp` shared volume (folder) for your Window's programs data.
 *  `-v $HOME/Downloads:/home/docker/.wine/drive_c/Downloads` shared volume (folder) for your Window's Download Folder.
-*  `-p 8080:8080` port that you will be connecting to.(8080 has been hard code in the dockerfile, You can use port fowarding to other port like
+*  `-p 8080:8080` port that you will be connecting to.(8080 has been hard code in the dockerfile, You can use port forwarding to other port like
 	```bash
     -p 8083:8080
     ```
 *  `-p 8081:22` SSH
+
+#### Variable list
+|Name         |explanations                                                       |
+|-------------|-------------------------------------------------------------------|
+|VNC_PASSWORD |The password for login VNC website; Default will empty(No password)|
+|USER_PASSWORD|The password of user; this is for ssh usage                        |
+|UID          |Set the UID of the user                                            | 
+|GID          |Set the GID of the user                                            | 
 
 ### Client
 
