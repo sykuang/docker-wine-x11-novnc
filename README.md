@@ -50,8 +50,8 @@ This follows these docker conventions:
 |-------------|-------------------------------------------------------------------|
 |VNC_PASSWORD |The password for login VNC website; Default will empty(No password)|
 |USER_PASSWORD|The password of user; this is for ssh usage                        |
-|UID          |Set the UID of the user                                            | 
-|GID          |Set the GID of the user                                            | 
+|PUID          |Set the UID of the user                                            | 
+|PGID          |Set the GID of the user                                            | 
 
 ### Client
 
