@@ -15,15 +15,24 @@ ENV NOVNC_HOME /usr/libexec/noVNCdim
 
 # Updating and upgrading a bit.
 # Install vnc, window manager and basic tools
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends language-pack-zh-hant x11vnc supervisor fluxbox sudo kitty && \
+RUN mkdir -pm755 /etc/apt/keyrings && \
+    curl -SL -k https://dl.winehq.org/wine-builds/winehq.key -o /etc/apt/keyrings/winehq-archive.key && \
+    mkdir -p /etc/apt/sources.list.d/ && \
+    curl -SL -k https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources -o /etc/apt/sources.list.d/winehq-focal.sources && \
+	# add-apt-repository ppa:ubuntu-toolchain-r/test && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends language-pack-zh-hant x11vnc supervisor fluxbox sudo xterm && \
     dpkg --add-architecture i386 && \
 # We need software-properties-common to add ppas.
     # apt-get install -y --no-install-recommends software-properties-common && \
     apt-get update && \
-    apt-get install -y --no-install-recommends wine wine32 && \
+	#apt-get install -y --no-install-recommends libsdl2-2.0 libsdl2-2.0:i386 && \
+	#curl -SL -k https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/xUbuntu_18.04/amd64/libfaudio0_19.07-0~bionic_amd64.deb -o libfaudio0_19.07-0~bionic_amd64.deb && \
+    #curl -SL -k https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/xUbuntu_18.04/i386/libfaudio0_19.07-0~bionic_i386.deb -o libfaudio0_19.07-0~bionic_i386.deb && \
+	#dpkg -i libfaudio0_19.07-0~bionic_amd64.deb libfaudio0_19.07-0~bionic_i386.deb && \
+	#rm libfaudio0_19.07-0~bionic_amd64.deb libfaudio0_19.07-0~bionic_i386.deb && \
+    apt-get install -y --no-install-recommends winehq-stable && \
     apt-get install -y --no-install-recommends xvfb python3 && \
-    apt-get install -y --no-install-recommends kitty && \
 # Install winetricks
     curl -SL -k https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks  -o /usr/local/bin/winetricks && \
     chmod a+x /usr/local/bin/winetricks  && \
