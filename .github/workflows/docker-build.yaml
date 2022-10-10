@@ -1,4 +1,4 @@
-name: ci
+name: Docker build
 
 on:
   push:
@@ -31,4 +31,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: sykuang/archlinux-ssh-x11:latest
+          tags: sykuang/wine-x11-novnc:latest

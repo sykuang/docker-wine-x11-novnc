@@ -24,10 +24,10 @@ check_vnc_pass
 if [[ -n $USER_PASSWORD ]];then
   echo "docker:$USER_PASSWORD" | chpasswd
 fi
-if [[ -n $UID ]]; then
-  usermod -u "$UID" docker
+if [[ -n $PUID ]]; then
+  usermod -u "$PUID" docker
 fi
-if [[ -n $GID ]]; then
-  groupmod -g "$GID" docker
+if [[ -n $PGID ]]; then
+  groupmod -g "$PGID" docker
 fi
 /usr/bin/supervisord

@@ -16,7 +16,7 @@ ENV NOVNC_HOME /usr/libexec/noVNCdim
 # Updating and upgrading a bit.
 # Install vnc, window manager and basic tools
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends language-pack-zh-hant x11vnc supervisor fluxbox sudo && \
+    apt-get install -y --no-install-recommends language-pack-zh-hant x11vnc supervisor fluxbox sudo kitty && \
     dpkg --add-architecture i386 && \
 # We need software-properties-common to add ppas.
     # apt-get install -y --no-install-recommends software-properties-common && \
