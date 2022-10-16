@@ -2,6 +2,7 @@
 ![Docker build](https://github.com/sykuang/docker-wine-x11-novnc/actions/workflows/docker-build.yaml/badge.svg)
 # Run A windows application with docker
 Using the docker image to run windows applications with Chinese support like "Smartget" on my Synology Nas(DS 916+)
+![Screenshot](https://raw.githubusercontent.com/sykuang/docker-wine-x11-novnc/master/screenshot.png)
 
 ## Install Image
    `docker pull sykuang/wine-x11-novnc`
